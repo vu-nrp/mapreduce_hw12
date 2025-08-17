@@ -46,10 +46,7 @@ set_target_properties(${PROJECT_NAME} mapper reducer PROPERTIES
 )
 
 #
-target_sources(${PROJECT_NAME} PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/input/AB_NYC_2019.csv
-    ${CMAKE_CURRENT_SOURCE_DIR}/mapreduce.sh
-)
+install(FILES input/AB_NYC_2019.csv mapreduce.sh DESTINATION INCLUDE ${CMAKE_INSTALL_BINDIR})
 install(TARGETS ${PROJECT_NAME} mapper reducer ${EX_FILES} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 set(CPACK_GENERATOR DEB)
