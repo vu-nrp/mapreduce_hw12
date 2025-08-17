@@ -1,32 +1,54 @@
-#include <string>
 #include <iostream>
+#include "functions.h"
 
-template<typename T>
-inline T pow2(const T &value)
+//!
+//! \brief main - entry point of average and dispersion calculation, reduce stage app
+//!
+
+int main(int argc, char *argv[])
 {
-    return value * value;
-}
+    std::cout << "reduce stage of big data average/dispersion calculation" << std::endl;
 
-int main()
-{
-    size_t counter = 0;
-    double avgSum = 0.0;
-    double sqrSum = 0.0;
-    std::string line;
+    static const std::string usageString {"usage: reducer [/avg] or /dsp"};
 
-    while (true) {
+    bool calcDispersion = false;
 
-        const auto value = std::stol(line);
+    if (argc == 2) {
+        const std::string flag = argv[1];
 
-        counter += 1;
-        avgSum += value;
-        sqrSum += pow2(value);
+        if (flag == "/dsp")
+            calcDispersion = true;
+        else if (flag != "/avg") {
+            std::cout << usageString << std::endl;
+            return 1;
+        }
+    } else if (argc != 1) {
+        std::cout << usageString << std::endl;
+        return 1;
     }
 
-    // среднеарифметическое
-    const auto avg = avgSum / counter;
+    double dsp = 0.0;
+    double avg = 0.0;
+    size_t counter = 0;
+    std::string line;
 
-    std::cout << "dispersion: " << sqrSum / counter - pow2(avg) << std::endl;
+    while (std::getline(std::cin, line)) {
+        try {
+            const auto value = std::stol(line);
+
+            ++counter;
+            avg = averageAccumulate(avg, value, counter);
+            if (calcDispersion)
+                dsp = averageAccumulate(dsp, pow2(value), counter);
+        } catch (std::out_of_range const& ex) {
+            std::cout << "invalid parameter: " << line << std::endl;
+        }
+    }
+
+    if (calcDispersion)
+        std::cout << "dispersion: " << dsp - pow2(avg) << std::endl;
+    else
+        std::cout << "average: " << avg << std::endl;
 
     return 0;
 }
