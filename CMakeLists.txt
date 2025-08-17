@@ -23,7 +23,7 @@ generate_export_header(${PROJECT_NAME})
 
 # executable mapper stage
 add_executable(mapper
-    mapper/main.cpp
+    mapper.cpp
 )
 
 target_link_libraries(mapper PRIVATE
@@ -32,7 +32,7 @@ target_link_libraries(mapper PRIVATE
 
 # executable reducer stage
 add_executable(reducer
-    reducer/main.cpp
+    reducer.cpp
 )
 
 target_link_libraries(reducer PRIVATE
